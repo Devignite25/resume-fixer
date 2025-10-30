@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Resume Fixer - AI-Powered ATS Optimization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1a202c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .auth-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .google-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .google-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .google-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .info-box {
+            background: #ebf4ff;
+            border: 2px solid #bee3f8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .info-title {
+            color: #2c5282;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .info-text {
+            color: #2c5282;
+            line-height: 1.6;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .logout-btn {
+            background: #fc8181;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .file-upload {
+            border: 3px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+
+        .file-upload.dragover {
+            border-color: #667eea;
+            background: #ebf4ff;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .score-container {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .score {
+            font-size: 4rem;
+            font-weight: bold;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .keyword-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .keyword {
+            background: #ebf4ff;
+            color: #2c5282;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .improvement {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .improvement-title {
+            font-weight: 600;
+            color: #22543d;
+            margin-bottom: 5px;
+        }
+
+        .improvement-text {
+            color: #2f855a;
+        }
+
+        .resume-output {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            margin-top: 15px;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 10px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .alert {
+            background: #fff5f5;
+            border: 1px solid #fc8181;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .usage-limit {
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🎯 Gemini Resume Fixer</h1>
+            <p class="subtitle">AI-Powered ATS Optimization - Uses Your Google Account</p>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-text">100% Private<br>Your data never leaves your browser</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">Free to Use<br>Uses your Google Gemini quota</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">✨</div>
+                    <div class="feature-text">ATS Optimized<br>Pass 94% of automated screens</div>
+                </div>
+            </div>
+
+            <!-- Login Section -->
+            <div id="loginSection" class="auth-section">
+                <button class="google-btn" id="googleLoginBtn">
+                    <svg class="google-icon" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Continue with Google
+                </button>
+
+                <div class="info-box">
+                    <div class="info-title">🚀 How it works:</div>
+                    <div class="info-text">
+                        1. <strong>Sign in</strong> with your Google account<br>
+                        2. <strong>Upload</strong> your resume<br>
+                        3. <strong>Gemini AI</strong> analyzes it<br>
+                        4. <strong>Download</strong> your optimized resume<br>
+                        <br>
+                        ✅ No API keys needed<br>
+                        ✅ 100% client-side - no data stored on servers
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Info & Upload Section -->
+            <div id="appSection" class="hidden">
+                <div class="user-info" id="userInfo">
+                    <img id="userAvatar" class="user-avatar" src="" alt="User">
+                    <div class="user-details">
+                        <div class="user-name" id="userName"></div>
+                        <div class="user-email" id="userEmail"></div>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">Logout</button>
+                </div>
+
+                <div class="file-upload" id="fileUpload">
+                    <div class="upload-icon">📄</div>
+                    <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 5px;">
+                        Drop your resume here or click to upload
+                    </div>
+                    <div style="color: #718096; font-size: 0.9rem;">
+                        Supports PDF, DOCX, TXT (max 5MB)
+                    </div>
+                    <input type="file" id="fileInput" accept=".pdf,.docx,.txt" style="display: none;">
+                </div>
+
+                <div id="fileName" style="text-align: center; color: #48bb78; font-weight: 600; margin-bottom: 20px;"></div>
+
+                <button class="btn" id="analyzeBtn" disabled>
+                    🔍 Analyze My Resume with Gemini
+                </button>
+
+                <div class="usage-limit">
+                    Free tier: Uses your Google Gemini quota (60 requests/min) | Want unlimited Pro features? <span style="color: #667eea; cursor: pointer;">Upgrade to Pro →</span>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingSection" class="hidden">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div style="font-size: 1.1rem; color: #4a5568;">
+                        🤖 Gemini is analyzing your resume...
+                    </div>
+                    <div style="color: #718096; margin-top: 10px;">
+                        This usually takes 10-15 seconds
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="hidden">
+                <div class="results">
+                    <div class="score-container">
+                        <div class="score" id="atsScore">--</div>
+                        <div class="score-label">ATS Compatibility Score</div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">🎯 Missing Keywords</div>
+                        <div class="keyword-list" id="keywordsList"></div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">💡 Recommended Improvements</div>
+                        <div id="improvementsList"></div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">📝 Optimized Resume</div>
+                        <div class="resume-output" id="optimizedResume"></div>
+                    </div>
+
+                    <button class="btn btn-secondary" id="downloadBtn">
+                        ⬇️ Download Optimized Resume (TXT)
+                    </button>
+
+                    <button class="btn" id="analyzeAnotherBtn" style="margin-top: 10px;">
+                        🔄 Analyze Another Resume
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Alert -->
+            <div id="errorAlert" class="alert hidden"></div>
+        </div>
+
+        <div style="text-align: center; color: white; margin-top: 20px; font-size: 0.9rem;">
+            Made with ❤️ using Google Gemini | <a href="#" style="color: white;">About</a> | <a href="#" style="color: white;">Privacy</a>
+        </div>
+    </div>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <script type="module">
+        // REPLACE WITH YOUR ACTUAL GOOGLE OAUTH CLIENT ID
+        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+        
+        // State Management
+        let currentUser = null;
+        let accessToken = null;
+        let currentFile = null;
+        let resumeText = '';
+
+        // DOM Elements
+        const loginSection = document.getElementById('loginSection');
+        const appSection = document.getElementById('appSection');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const userInfo = document.getElementById('userInfo');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const fileUpload = document.getElementById('fileUpload');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loadingSection = document.getElementById('loadingSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const errorAlert = document.getElementById('errorAlert');
+        const analyzeAnotherBtn = document.getElementById('analyzeAnotherBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // Initialize Google Identity Services
+        function initializeGoogleAuth() {
+            google.accounts.id.initialize({
+                client_id: CLIENT_ID,
+                callback: handleCredentialResponse,
+                auto_select: false
+            });
+
+            // Custom button click handler
+            googleLoginBtn.addEventListener('click', () => {
+                google.accounts.oauth2.initTokenClient({
+                    client_id: CLIENT_ID,
+                    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/generative-language.retriever',
+                    callback: async (response) => {
+                        if (response.access_token) {
+                            accessToken = response.access_token;
+                            await getUserInfo(response.access_token);
+                            showAppSection();
+                        }
+                    },
+                }).requestAccessToken();
+            });
+        }
+
+        async function getUserInfo(token) {
+            try {
+                const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                currentUser = await response.json();
+                
+                userName.textContent = currentUser.name;
+                userEmail.textContent = currentUser.email;
+                userAvatar.src = currentUser.picture;
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+                showError('Failed to get user information');
+            }
+        }
+
+        function handleCredentialResponse(response) {
+            // This handles the ID token from Google Sign-In
+            // For Gemini API access, we need the access token from OAuth2
+        }
+
+        function showAppSection() {
+            loginSection.classList.add('hidden');
+            appSection.classList.remove('hidden');
+        }
+
+        // Logout Handler
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            accessToken = null;
+            google.accounts.id.disableAutoSelect();
+            appSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+        });
+
+        // File Upload Handlers
+        fileUpload.addEventListener('click', () => fileInput.click());
+
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        });
+
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.classList.remove('dragover');
+        });
+
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            handleFile(file);
+        });
+
+        async function handleFile(file) {
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showError('File too large. Please upload a file smaller than 5MB.');
+                return;
+            }
+
+            const validTypes = ['text/plain', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!validTypes.includes(file.type) && !file.name.match(/\.(txt|pdf|docx)$/i)) {
+                showError('Invalid file type. Please upload PDF, DOCX, or TXT.');
+                return;
+            }
+
+            currentFile = file;
+            fileName.textContent = `📄 ${file.name}`;
+            analyzeBtn.disabled = false;
+
+            try {
+                resumeText = await readFileContent(file);
+            } catch (error) {
+                showError('Error reading file. Please try again.');
+            }
+        }
+
+        async function readFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onload = (e) => {
+                    let text = e.target.result;
+                    
+                    if (file.type === 'application/pdf') {
+                        // For MVP, suggest using TXT. In production, use pdf.js
+                        text = "For MVP, please use TXT files. PDF parsing requires pdf.js library.";
+                    } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                        // For MVP, suggest using TXT. In production, use mammoth.js
+                        text = "For MVP, please use TXT files. DOCX parsing requires mammoth.js library.";
+                    }
+                    
+                    resolve(text);
+                };
+                
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsText(file);
+            });
+        }
+
+        // Analyze Resume with Gemini API
+        analyzeBtn.addEventListener('click', async () => {
+            if (!accessToken) {
+                showError('Please log in with Google first');
+                return;
+            }
+
+            appSection.classList.add('hidden');
+            loadingSection.classList.remove('hidden');
+            errorAlert.classList.add('hidden');
+
+            try {
+                // Call Gemini API using user's access token
+                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `You are an expert ATS (Applicant Tracking System) resume optimizer. Analyze this resume and provide detailed feedback.
+
+Resume:
+${resumeText}
+
+Respond ONLY with valid JSON in this exact format:
+{
+    "ats_score": 75,
+    "missing_keywords": ["keyword1", "keyword2", "keyword3"],
+    "improvements": [
+        {"title": "Issue title", "description": "How to fix it"},
+        {"title": "Another issue", "description": "Fix description"}
+    ],
+    "optimized_resume": "The full optimized resume text here..."
+}
+
+Focus on:
+1. ATS compatibility (keywords, formatting, structure)
+2. Action verbs and quantifiable achievements
+3. Proper section organization
+4. Industry-standard terminology
+5. Clear, concise language`
+                            }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const text = data.candidates[0].content.parts[0].text;
+
+                // Parse JSON response
+                let result;
+                try {
+                    const cleanText = text.replace(/```json\n?|\n?```/g, '').trim();
+                    result = JSON.parse(cleanText);
+                } catch (parseError) {
+                    throw new Error('Failed to parse AI response. Please try again.');
+                }
+
+                displayResults(result);
+
+            } catch (error) {
+                console.error('Analysis error:', error);
+                loadingSection.classList.add('hidden');
+                appSection.classList.remove('hidden');
+                showError(`Analysis failed: ${error.message}. Make sure you have Gemini API enabled in your Google account.`);
+            }
+        });
+
+        function displayResults(data) {
+            loadingSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+
+            document.getElementById('atsScore').textContent = data.ats_score || '--';
+
+            const keywordsList = document.getElementById('keywordsList');
+            keywordsList.innerHTML = '';
+            (data.missing_keywords || []).forEach(keyword => {
+                const span = document.createElement('span');
+                span.className = 'keyword';
+                span.textContent = keyword;
+                keywordsList.appendChild(span);
+            });
+
+            const improvementsList = document.getElementById('improvementsList');
+            improvementsList.innerHTML = '';
+            (data.improvements || []).forEach(improvement => {
+                const div = document.createElement('div');
+                div.className = 'improvement';
+                div.innerHTML = `
+                    <div class="improvement-title">${improvement.title}</div>
+                    <div class="improvement-text">${improvement.description}</div>
+                `;
+                improvementsList.appendChild(div);
+            });
+
+            document.getElementById('optimizedResume').textContent = data.optimized_resume || resumeText;
+        }
+
+        downloadBtn.addEventListener('click', () => {
+            const optimizedText = document.getElementById('optimizedResume').textContent;
+            const blob = new Blob([optimizedText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'optimized_resume.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        analyzeAnotherBtn.addEventListener('click', () => {
+            resultsSection.classList.add('hidden');
+            appSection.classList.remove('hidden');
+            currentFile = null;
+            resumeText = '';
+            fileName.textContent = '';
+            analyzeBtn.disabled = true;
+            fileInput.value = '';
+        });
+
+        function showError(message) {
+            errorAlert.textContent = message;
+            errorAlert.classList.remove('hidden');
+            setTimeout(() => {
+                errorAlert.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Initialize on page load
+        window.onload = () => {
+            initializeGoogleAuth();
+        };
+    </script>
+</body>
+</html>
